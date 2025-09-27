@@ -1,0 +1,141 @@
+"use client";
+
+import { useEffect } from 'react';
+import Image from 'next/image';
+import { BlogPost } from '@/types';
+import { getStrapiMediaUrl } from '@/lib/api';
+import { X, ArrowLeft, ArrowRight } from 'lucide-react';
+import { marked } from 'marked';
+
+interface BlogPostModalProps {
+  posts: BlogPost[];
+  initialPostIndex: number | null;
+  onClose: () => void;
+  onNavigate: (newIndex: number) => void;
+}
+
+export default function BlogPostModal({
+  posts,
+  initialPostIndex,
+  onClose,
+  onNavigate,
+}: BlogPostModalProps) {
+  const postIndex = initialPostIndex;
+
+  // Handle keyboard navigation
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+      if (e.key === 'ArrowLeft' && postIndex !== null && postIndex > 0) {
+        onNavigate(postIndex - 1);
+      }
+      if (e.key === 'ArrowRight' && postIndex !== null && postIndex < posts.length - 1) {
+        onNavigate(postIndex + 1);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [postIndex, posts.length, onClose, onNavigate]);
+
+  if (postIndex === null) return null;
+
+  const post = posts[postIndex];
+  if (!post) return null;
+
+  const { title, content, publishedAt, cover_image, author } = post.attributes;
+  const imageUrl = getStrapiMediaUrl(cover_image.data.attributes.url, 'large');
+  const contentHtml = content ? marked.parse(content) : '';
+  const authorData = author?.data?.attributes;
+  const authorImageUrl = getStrapiMediaUrl(authorData?.picture?.data?.attributes?.formats?.thumbnail?.url);
+
+  const hasNext = postIndex < posts.length - 1;
+  const hasPrev = postIndex > 0;
+
+  return (
+    <div
+      className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fade-in"
+      onClick={onClose}
+    >
+      <div
+        className="relative bg-white w-full max-w-5xl h-[90vh] rounded-2xl shadow-2xl flex flex-col md:flex-row overflow-hidden"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Close Button */}
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 z-20 p-2 bg-white/50 rounded-full hover:bg-white transition-colors"
+          aria-label="Close"
+        >
+          <X className="h-6 w-6 text-gray-800" />
+        </button>
+
+        {/* Navigation Arrows */}
+        {hasPrev && (
+          <button
+            onClick={() => onNavigate(postIndex - 1)}
+            className="absolute left-4 top-1/2 -translate-y-1/2 z-20 p-3 bg-white/70 rounded-full shadow-lg hover:bg-white transition-all"
+            aria-label="Previous Post"
+          >
+            <ArrowLeft className="h-6 w-6 text-gray-800" />
+          </button>
+        )}
+        {hasNext && (
+          <button
+            onClick={() => onNavigate(postIndex + 1)}
+            className="absolute right-4 top-1/2 -translate-y-1/2 z-20 p-3 bg-white/70 rounded-full shadow-lg hover:bg-white transition-all"
+            aria-label="Next Post"
+          >
+            <ArrowRight className="h-6 w-6 text-gray-800" />
+          </button>
+        )}
+
+        {/* Image Panel */}
+        <div className="w-full md:w-1/2 h-64 md:h-full relative flex-shrink-0">
+          {imageUrl && (
+            <Image
+              src={imageUrl}
+              alt={title}
+              fill
+              className="object-cover"
+              priority
+            />
+          )}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+        </div>
+
+        {/* Content Panel */}
+        <div className="w-full md:w-1/2 flex flex-col overflow-y-auto">
+          <div className="p-8 lg:p-12">
+            <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">{title}</h1>
+            <div className="flex items-center space-x-4 text-gray-500 mb-6 border-b pb-4">
+              {authorImageUrl && (
+                <Image
+                  src={authorImageUrl}
+                  alt={authorData?.name || ''}
+                  width={48}
+                  height={48}
+                  className="rounded-full"
+                />
+              )}
+              <div>
+                <p className="font-semibold text-gray-800">{authorData?.name}</p>
+                <p className="text-sm">
+                  {new Date(publishedAt).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                  })}
+                </p>
+              </div>
+            </div>
+            <article
+              className="prose lg:prose-lg max-w-none prose-headings:text-gray-800 prose-p:text-gray-600 prose-a:text-teal-600"
+              dangerouslySetInnerHTML={{ __html: contentHtml }}
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
