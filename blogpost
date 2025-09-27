@@ -22,7 +22,7 @@ export default function BlogPostModal({
 }: BlogPostModalProps) {
   const postIndex = initialPostIndex;
 
-  // Handle keyboard navigation
+  // Handle keyboard navigation (Escape key and Arrow keys)
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
@@ -53,13 +53,14 @@ export default function BlogPostModal({
   const hasPrev = postIndex > 0;
 
   return (
+    // The main overlay
     <div
       className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fade-in"
       onClick={onClose}
     >
       <div
         className="relative bg-white w-full max-w-5xl h-[90vh] rounded-2xl shadow-2xl flex flex-col md:flex-row overflow-hidden"
-        onClick={(e) => e.stopPropagation()}
+        onClick={(e) => e.stopPropagation()} // Prevents closing modal when clicking inside it
       >
         {/* Close Button */}
         <button
@@ -108,7 +109,7 @@ export default function BlogPostModal({
         <div className="w-full md:w-1/2 flex flex-col overflow-y-auto">
           <div className="p-8 lg:p-12">
             <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">{title}</h1>
-            <div className="flex items-center space-x-4 text-gray-500 mb-6 border-b pb-4">
+            <div className="flex items-center space-x-4 text-gray-500 mb-6 border-b border-gray-200 pb-4">
               {authorImageUrl && (
                 <Image
                   src={authorImageUrl}
@@ -139,3 +140,4 @@ export default function BlogPostModal({
     </div>
   );
 }
+
