@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel Explorer - Dark SVG Theme</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Define the custom font and ensure the body fills the viewport */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden; /* Prevent horizontal scrolling */
+            background-color: #0f172a; /* Fallback for areas not covered by the bg */
+        }
+
+        /* UPDATED: Custom class for the eye-catching SVG Travel Background (Galaxy/Deep Space) */
+        .travel-svg-bg {
+            background-color: #0f172a; /* Deep sapphire blue (dark but not black) */
+            /* Repeating SVG pattern featuring faint stars and nebulae lines */
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3C!-- Stars (White/Slate-100 with varying opacity) --%3E%3Ccircle cx='10' cy='10' r='1' fill='%23f1f5f9' opacity='0.2'/%3E%3Ccircle cx='50' cy='50' r='0.5' fill='%23f1f5f9' opacity='0.4'/%3E%3Ccircle cx='80' cy='20' r='1.5' fill='%23f1f5f9' opacity='0.15'/%3E%3Ccircle cx='30' cy='75' r='0.8' fill='%23f1f5f9' opacity='0.3'/%3E%3Ccircle cx='95' cy='90' r='0.6' fill='%23f1f5f9' opacity='0.5'/%3E%3Ccircle cx='5' cy='55' r='1.2' fill='%23f1f5f9' opacity='0.1'/%3E%3C!-- Subtle Nebula/Swirl (Cyan with very low opacity) --%3E%3Cpath fill='none' stroke='%2338bdf8' stroke-width='0.5' opacity='0.08' d='M0 50 C25 25, 75 75, 100 50'/%3E%3Cpath fill='none' stroke='%2338bdf8' stroke-width='0.3' opacity='0.05' d='M50 0 C75 25, 25 75, 50 100'/%3E%3C/svg%3E");
+            background-size: 100px 100px; /* Size of the repeating tile */
+            background-attachment: fixed; /* Keeps the pattern fixed as content scrolls over it */
+            background-position: center;
+        }
+        
+        /* Pseudo-element for the crucial dark overlay */
+        .dark-overlay::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            /* Deep, dark blue overlay */
+            background-color: rgba(0, 0, 0, 0.55); 
+            z-index: 1; /* Place overlay over the image but under the content */
+        }
+
+        /* Custom spinner for loading state */
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 4px solid #38bdf8; /* Tailwind cyan-400 */
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Main Container: Full viewport height and the primary background -->
+    <div class="relative min-h-screen travel-svg-bg dark-overlay pb-12">
+
+        <!-- Header Content (Z-Index ensures it's above the overlay) -->
+        <header class="sticky top-0 z-50 bg-gray-900/80 backdrop-blur-sm shadow-xl px-8 text-white">
+            <nav class="flex justify-between items-center py-4">
+                <div class="text-2xl font-extrabold tracking-widest text-cyan-300">EXPLORE.INK</div>
+                <div class="space-x-6 hidden md:flex items-center">
+                    <a href="#collections" class="hover:text-cyan-300 transition duration-300">Collections</a>
+                    <a href="#generator" class="hover:text-cyan-300 transition duration-300">Generator</a>
+                    <a href="#" class="hover:text-cyan-300 transition duration-300">About Us</a>
+                    <button class="bg-yellow-400 hover:bg-yellow-300 text-gray-900 font-bold py-2 px-4 rounded-full shadow-lg transition duration-300">
+                        Book Now
+                    </button>
+                </div>
+                <!-- Mobile Menu Button Placeholder -->
+                <button class="md:hidden text-2xl text-cyan-300">☰</button>
+            </nav>
+        </header>
+
+        <!-- Main Content Wrapper -->
+        <div class="relative z-20">
+
+            <!-- 1. Hero Section (Centered Main Content) -->
+            <section class="flex flex-col justify-center items-center text-center pt-24 pb-20 px-4 min-h-[70vh]">
+                
+                <h1 class="text-6xl md:text-7xl lg:text-8xl font-extrabold text-white mb-6 tracking-tight drop-shadow-lg">
+                    <span class="text-cyan-300">The World</span> Awaits.
+                </h1>
+                
+                <p class="text-xl md:text-2xl text-gray-200 max-w-4xl mb-10 drop-shadow-md">
+                    Find experiences, not just places. Unlock your next journey with our AI-powered travel tools and curated collections.
+                </p>
+
+            </section>
+
+            <!-- 2. Dream Trip Generator (Gemini Feature) -->
+            <section id="generator" class="px-4 md:px-8 py-12 flex justify-center">
+                <div class="w-full max-w-4xl bg-gray-900/70 p-6 md:p-10 rounded-3xl shadow-2xl shadow-cyan-800/30 backdrop-blur-md border border-cyan-700/50">
+                    <h2 class="text-3xl font-bold text-white mb-6 text-center">✨ Dream Trip Generator</h2>
+                    <p class="text-center text-gray-300 mb-6 max-w-xl mx-auto">Tell us what you dream of—we'll generate an itinerary concept, complete with real-time inspiration.</p>
+                    
+                    <div class="flex flex-col sm:flex-row gap-3">
+                        <input 
+                            type="text" 
+                            id="trip-prompt" 
+                            placeholder="e.g., A relaxing 7-day trip to Italy focusing on food and wine"
+                            class="flex-grow p-4 rounded-xl border border-gray-700 bg-gray-800 text-white focus:ring-yellow-400 focus:border-yellow-400 transition duration-300 placeholder-gray-400 text-lg"
+                        />
+                        <button 
+                            id="generate-button"
+                            onclick="generateTripIdea()"
+                            class="flex-shrink-0 bg-yellow-400 hover:bg-yellow-300 text-gray-900 font-black text-lg py-3 px-8 rounded-xl shadow-lg transition duration-300 transform hover:scale-[1.02] active:scale-95 flex items-center justify-center disabled:opacity-50"
+                        >
+                            <span id="button-text">Generate Idea</span>
+                            <div id="loading-spinner" class="spinner hidden"></div>
+                        </button>
+                    </div>
+                    
+                    <!-- Results Area -->
+                    <div id="trip-result" class="mt-8 text-left p-6 bg-gray-800/80 rounded-xl border border-gray-700 hidden">
+                        <h3 class="text-xl font-bold text-cyan-300 mb-3">Your Perfect Trip:</h3>
+                        <div id="result-content" class="text-gray-200 whitespace-pre-wrap leading-relaxed"></div>
+                        <div id="result-sources" class="mt-4 pt-3 border-t border-gray-700 text-xs text-gray-400 italic"></div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- 3. Featured Collections Section -->
+            <section id="collections" class="px-4 md:px-8 py-20">
+                <h2 class="text-4xl font-bold text-white text-center mb-12">Curated Collections</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
+                    
+                    <!-- Card 1: Adventure -->
+                    <div class="bg-gray-900/70 rounded-xl overflow-hidden shadow-xl hover:shadow-cyan-500/50 transition duration-300 transform hover:scale-[1.03] border border-gray-800">
+                        <img src="https://placehold.co/400x250/0f766e/ffffff?text=Mountain+Adventure" alt="Mountain Adventure" class="w-full h-40 object-cover opacity-80">
+                        <div class="p-5">
+                            <h3 class="text-xl font-semibold text-cyan-300 mb-2">Wilderness Expeditions</h3>
+                            <p class="text-gray-400 text-sm mb-4">Trek through untouched landscapes, climb peaks, and discover remote beauty.</p>
+                            <a href="#" class="text-yellow-400 hover:text-yellow-300 font-medium text-sm transition duration-300">View Adventures &rarr;</a>
+                        </div>
+                    </div>
+
+                    <!-- Card 2: Culture -->
+                    <div class="bg-gray-900/70 rounded-xl overflow-hidden shadow-xl hover:shadow-cyan-500/50 transition duration-300 transform hover:scale-[1.03] border border-gray-800">
+                        <img src="https://placehold.co/400x250/5b21b6/ffffff?text=Historic+City" alt="Historic City" class="w-full h-40 object-cover opacity-80">
+                        <div class="p-5">
+                            <h3 class="text-xl font-semibold text-cyan-300 mb-2">Heritage & History</h3>
+                            <p class="text-gray-400 text-sm mb-4">Immerse yourself in ancient cities, rich traditions, and global heritage sites.</p>
+                            <a href="#" class="text-yellow-400 hover:text-yellow-300 font-medium text-sm transition duration-300">View Journeys &rarr;</a>
+                        </div>
+                    </div>
+
+                    <!-- Card 3: Relaxation -->
+                    <div class="bg-gray-900/70 rounded-xl overflow-hidden shadow-xl hover:shadow-cyan-500/50 transition duration-300 transform hover:scale-[1.03] border border-gray-800">
+                        <img src="https://placehold.co/400x250/4f46e5/ffffff?text=Beach+Resort" alt="Beach Resort" class="w-full h-40 object-cover opacity-80">
+                        <div class="p-5">
+                            <h3 class="text-xl font-semibold text-cyan-300 mb-2">Luxury Escapes</h3>
+                            <p class="text-gray-400 text-sm mb-4">Find tranquility in overwater bungalows, remote resorts, and spa retreats.</p>
+                            <a href="#" class="text-yellow-400 hover:text-yellow-300 font-medium text-sm transition duration-300">View Retreats &rarr;</a>
+                        </div>
+                    </div>
+
+                    <!-- Card 4: Culinary -->
+                    <div class="bg-gray-900/70 rounded-xl overflow-hidden shadow-xl hover:shadow-cyan-500/50 transition duration-300 transform hover:scale-[1.03] border border-gray-800">
+                        <img src="https://placehold.co/400x250/ef4444/ffffff?text=Food+Plate" alt="Food Plate" class="w-full h-40 object-cover opacity-80">
+                        <div class="p-5">
+                            <h3 class="text-xl font-semibold text-cyan-300 mb-2">Culinary Tours</h3>
+                            <p class="text-gray-400 text-sm mb-4">Savor local flavors, attend cooking classes, and explore the world's best food scenes.</p>
+                            <a href="#" class="text-yellow-400 hover:text-yellow-300 font-medium text-sm transition duration-300">View Tours &rarr;</a>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+            
+            <!-- 4. Final Call to Action Footer -->
+            <section class="bg-cyan-900/40 border-t border-b border-cyan-700/50 mt-12 py-16 px-4 md:px-8">
+                <div class="flex flex-col md:flex-row justify-between items-center max-w-6xl mx-auto">
+                    <h2 class="text-3xl md:text-4xl font-extrabold text-white mb-6 md:mb-0">
+                        Ready to make your map a reality?
+                    </h2>
+                    <button class="bg-yellow-400 hover:bg-yellow-300 text-gray-900 font-black text-xl py-4 px-12 rounded-xl shadow-2xl transform hover:scale-105 transition duration-300 ease-in-out">
+                        Explore All Packages
+                    </button>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent";
+        const apiKey = ""; // API key is provided automatically in this environment
+
+        const tripPromptInput = document.getElementById('trip-prompt');
+        const generateButton = document.getElementById('generate-button');
+        const buttonText = document.getElementById('button-text');
+        const loadingSpinner = document.getElementById('loading-spinner');
+        const tripResultDiv = document.getElementById('trip-result');
+        const resultContentDiv = document.getElementById('result-content');
+        const resultSourcesDiv = document.getElementById('result-sources');
+
+        /**
+         * Sets the loading state of the UI elements.
+         * @param {boolean} isLoading 
+         */
+        function setLoadingState(isLoading) {
+            generateButton.disabled = isLoading;
+            buttonText.classList.toggle('hidden', isLoading);
+            loadingSpinner.classList.toggle('hidden', !isLoading);
+        }
+
+        /**
+         * Simple exponential backoff for retrying API calls.
+         * @param {function} fn - The function to execute.
+         * @param {number} maxRetries - Maximum number of retries.
+         * @param {number} delay - Initial delay in ms.
+         */
+        async function fetchWithBackoff(fn, maxRetries = 5, delay = 1000) {
+            for (let i = 0; i < maxRetries; i++) {
+                try {
+                    return await fn();
+                } catch (error) {
+                    if (i === maxRetries - 1) throw error;
+                    await new Promise(resolve => setTimeout(resolve, delay * (2 ** i)));
+                }
+            }
+        }
+
+        /**
+         * Calls the Gemini API to generate a trip idea.
+         */
+        async function generateTripIdea() {
+            const userQuery = tripPromptInput.value.trim();
+            if (!userQuery) {
+                tripPromptInput.focus();
+                return;
+            }
+
+            setLoadingState(true);
+            tripResultDiv.classList.add('hidden');
+            resultContentDiv.innerHTML = '';
+            resultSourcesDiv.innerHTML = '';
+
+            try {
+                const systemPrompt = "You are a world-class travel planner and storyteller. Based on the user's request, generate a detailed and exciting travel concept. Provide a catchy Title, a 3-paragraph summary covering the Destination(s), key Activities/Theme, and ideal duration, written in a compelling, aspirational style. ONLY use Markdown formatting for headings and lists. Ensure the response is factually grounded.";
+
+                const payload = {
+                    contents: [{ parts: [{ text: userQuery }] }],
+                    tools: [{ "google_search": {} }], // Enable Google Search for real-time, grounded information
+                    systemInstruction: { parts: [{ text: systemPrompt }] },
+                };
+
+                const response = await fetchWithBackoff(async () => {
+                    const res = await fetch(`${API_URL}?key=${apiKey}`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+                    return res;
+                });
+
+                const result = await response.json();
+                const candidate = result.candidates?.[0];
+                
+                if (candidate && candidate.content?.parts?.[0]?.text) {
+                    const text = candidate.content.parts[0].text;
+                    resultContentDiv.innerText = text; // Use innerText to correctly display markdown content as text
+
+                    // Extract grounding sources
+                    let sources = [];
+                    const groundingMetadata = candidate.groundingMetadata;
+                    if (groundingMetadata && groundingMetadata.groundingAttributions) {
+                        sources = groundingMetadata.groundingAttributions
+                            .map(attr => ({
+                                uri: attr.web?.uri,
+                                title: attr.web?.title,
+                            }))
+                            .filter(source => source.uri && source.title);
+                    }
+
+                    if (sources.length > 0) {
+                        const uniqueSources = Array.from(new Set(sources.map(s => s.uri)))
+                            .map(uri => sources.find(s => s.uri === uri));
+
+                        resultSourcesDiv.innerHTML = 'Grounded sources: ' + uniqueSources.map(s => 
+                            `<a href="${s.uri}" target="_blank" class="text-blue-400 hover:text-blue-300 underline">${s.title}</a>`
+                        ).join(', ');
+                    } else {
+                        resultSourcesDiv.innerHTML = 'No external sources cited for this idea.';
+                    }
+                    
+                    tripResultDiv.classList.remove('hidden');
+
+                } else {
+                    resultContentDiv.innerText = 'Could not generate a trip idea. Please try a different prompt.';
+                    tripResultDiv.classList.remove('hidden');
+                }
+
+            } catch (error) {
+                console.error("Error generating trip idea:", error);
+                resultContentDiv.innerText = 'An error occurred while connecting to the generator. Please check your network or try again.';
+                tripResultDiv.classList.remove('hidden');
+            } finally {
+                setLoadingState(false);
+            }
+        }
+    </script>
+</body>
+</html>
